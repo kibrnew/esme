@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /utils/*
+
+# Host
+Host: https://www.esme.com
+
+# Sitemaps
+Sitemap: https://www.esme.com/sitemap.xml
+Sitemap: https://www.lebufooballclub.com/sitemap.xml
