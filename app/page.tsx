@@ -1,10 +1,9 @@
 "use client";
-
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
-import { ArrowRight, Award, Book, Globe, Users } from "lucide-react";
+import { Award, Book, Globe, Users } from "lucide-react";
+import { projects, publications, awards } from "@/utils/dummyData";
 
 // Import slick carousel styles
 import "slick-carousel/slick/slick.css";
@@ -29,33 +28,6 @@ const heroSlides = [
   },
 ];
 
-const achievements = [
-  {
-    title: "Medical Device Breakthrough",
-    description:
-      "EMES members developed a new non-invasive diagnostic tool, improving patient outcomes by 40%",
-    image: "/placeholder.svg?height=300&width=400",
-  },
-  {
-    title: "Sustainable Engineering Innovation",
-    description:
-      "Our team contributed to the development of eco-friendly materials for construction",
-    image: "/placeholder.svg?height=300&width=400",
-  },
-  {
-    title: "AI in Healthcare",
-    description:
-      "EMES-led research resulted in more accurate disease prediction models",
-    image: "/placeholder.svg?height=300&width=400",
-  },
-  {
-    title: "Clean Energy Solutions",
-    description:
-      "We pioneered new techniques in solar energy, increasing efficiency by 25%",
-    image: "/placeholder.svg?height=300&width=400",
-  },
-];
-
 const services = [
   { title: "Professional Workshops", icon: Book },
   { title: "Certifications", icon: Award },
@@ -68,27 +40,6 @@ const sponsors = [
   "/placeholder.svg?height=100&width=200",
   "/placeholder.svg?height=100&width=200",
   "/placeholder.svg?height=100&width=200",
-];
-
-const announcements = [
-  {
-    title: "Annual Conference 2023",
-    description:
-      "Join us for our biggest event of the year. Early bird registration now open!",
-    date: "October 15-17, 2023",
-  },
-  {
-    title: "New Certification Program",
-    description:
-      "EMES now offers advanced certifications in Biomedical Engineering.",
-    date: "Enrolling for Fall 2023",
-  },
-  {
-    title: "Research Grant Applications",
-    description:
-      "Apply now for our annual research grants in medical technology.",
-    date: "Deadline: August 31, 2023",
-  },
 ];
 
 export default function Home() {
@@ -143,27 +94,21 @@ export default function Home() {
         </Slider>
       </section>
 
-      {/* Previous Work/Achievements Section */}
+      {/* Projects Section */}
       <section className="py-16 px-4 md:px-8">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Our Achievements
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Our Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {achievements.map((achievement, index) => (
+          {projects.map((project) => (
             <div
-              key={index}
+              key={project.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
             >
-              <Image
-                src={achievement.image || "/placeholder.svg"}
-                alt={achievement.title}
-                width={400}
-                height={300}
-                className="w-full h-48 object-cover"
-              />
               <div className="p-4">
-                <h3 className="font-bold text-xl mb-2">{achievement.title}</h3>
-                <p className="text-gray-600">{achievement.description}</p>
+                <h3 className="font-bold text-xl mb-2">{project.name}</h3>
+                <p className="text-gray-600">{project.description}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Year: {project.year}
+                </p>
               </div>
             </div>
           ))}
@@ -181,6 +126,29 @@ export default function Home() {
             >
               <service.icon className="w-16 h-16 mx-auto mb-4 text-blue-600" />
               <h3 className="font-bold text-xl">{service.title}</h3>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Publications Section */}
+      <section className="py-16 px-4 md:px-8">
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Latest Publications
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {publications.map((publication) => (
+            <div
+              key={publication.id}
+              className="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              <div className="p-4">
+                <h3 className="font-bold text-xl mb-2">{publication.title}</h3>
+                <p className="text-gray-600">Author: {publication.author}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Year: {publication.year}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -204,26 +172,21 @@ export default function Home() {
         </Slider>
       </section>
 
-      {/* Announcements Section */}
+      {/* Awards Section */}
       <section className="py-16 px-4 md:px-8 bg-gray-200">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Latest Announcements
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-12">Recent Awards</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {announcements.map((announcement, index) => (
+          {awards.map((award) => (
             <div
-              key={index}
+              key={award.id}
               className="bg-white rounded-lg shadow-lg p-6 transition duration-300 ease-in-out transform hover:scale-105"
             >
-              <h3 className="font-bold text-xl mb-2">{announcement.title}</h3>
-              <p className="text-gray-600 mb-4">{announcement.description}</p>
+              <h3 className="font-bold text-xl mb-2">{award.title}</h3>
+              <p className="text-gray-600 mb-4">{award.description}</p>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">
-                  {announcement.date}
+                  {new Date(award.date_awarded).toLocaleDateString()}
                 </span>
-                <button className="text-blue-600 hover:text-blue-800 flex items-center">
-                  Learn More <ArrowRight className="ml-1 w-4 h-4" />
-                </button>
               </div>
             </div>
           ))}

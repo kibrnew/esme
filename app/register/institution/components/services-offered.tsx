@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-export default function ServicesOffered({ onSubmit, onBack }: { onSubmit: (data: any) => void, onBack: () => void }) {
-  const [services, setServices] = useState([''])
+export default function ServicesOffered({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void }) {
+  const [services, setServices] = useState([""])
 
   const handleChange = (index: number, value: string) => {
-    const updatedServices = services.map((service, i) => i === index ? value : service)
+    const updatedServices = services.map((service, i) => (i === index ? value : service))
     setServices(updatedServices)
   }
 
   const addService = () => {
-    setServices([...services, ''])
+    setServices([...services, ""])
   }
 
   const removeService = (index: number) => {
@@ -18,7 +18,7 @@ export default function ServicesOffered({ onSubmit, onBack }: { onSubmit: (data:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit({ services: services.filter(service => service.trim() !== '') })
+    onSubmit({ services: services.filter((service) => service.trim() !== "") })
   }
 
   return (
@@ -32,18 +32,33 @@ export default function ServicesOffered({ onSubmit, onBack }: { onSubmit: (data:
             onChange={(e) => handleChange(index, e.target.value)}
             className="flex-grow px-3 py-2 border rounded"
             placeholder={`Service ${index + 1}`}
+            required
           />
-          <button type="button" onClick={() => removeService(index)} className="bg-red-500 text-white px-3 py-2 rounded">
-            Remove
-          </button>
+          {services.length > 1 && (
+            <button
+              type="button"
+              onClick={() => removeService(index)}
+              className="bg-red-500 text-white px-3 py-2 rounded"
+            >
+              Remove
+            </button>
+          )}
         </div>
       ))}
-      <button type="button" onClick={addService} className="bg-secondary text-white px-4 py-2 rounded">
+      <button
+        type="button"
+        onClick={addService}
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
         Add Service
       </button>
       <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded">Back</button>
-        <button type="submit" className="bg-primary text-white px-4 py-2 rounded">Next</button>
+        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+          Back
+        </button>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          Next
+        </button>
       </div>
     </form>
   )

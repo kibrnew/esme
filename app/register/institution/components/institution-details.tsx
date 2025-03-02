@@ -1,18 +1,14 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 export default function InstitutionDetails({ onSubmit }: { onSubmit: (data: any) => void }) {
   const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    city: '',
-    country: '',
-    telephone: '',
-    email: '',
-    contactPersonName: '',
-    contactPersonPosition: '',
+    name: "",
+    type: "",
+    registration_number: "",
+    year_established: "",
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
@@ -24,7 +20,9 @@ export default function InstitutionDetails({ onSubmit }: { onSubmit: (data: any)
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block mb-1">Institution Name</label>
+        <label htmlFor="name" className="block mb-1">
+          Institution Name
+        </label>
         <input
           type="text"
           id="name"
@@ -36,90 +34,56 @@ export default function InstitutionDetails({ onSubmit }: { onSubmit: (data: any)
         />
       </div>
       <div>
-        <label htmlFor="address" className="block mb-1">Address</label>
+        <label htmlFor="type" className="block mb-1">
+          Institution Type
+        </label>
+        <select
+          id="type"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          required
+          className="w-full px-3 py-2 border rounded"
+        >
+          <option value="">Select</option>
+          <option value="University">University</option>
+          <option value="Research Institute">Research Institute</option>
+          <option value="Company">Company</option>
+          <option value="Non-profit Organization">Non-profit Organization</option>
+          <option value="Government Agency">Government Agency</option>
+        </select>
+      </div>
+      <div>
+        <label htmlFor="registration_number" className="block mb-1">
+          Registration Number
+        </label>
         <input
           type="text"
-          id="address"
-          name="address"
-          value={formData.address}
+          id="registration_number"
+          name="registration_number"
+          value={formData.registration_number}
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="city" className="block mb-1">City</label>
+        <label htmlFor="year_established" className="block mb-1">
+          Year Established
+        </label>
         <input
-          type="text"
-          id="city"
-          name="city"
-          value={formData.city}
+          type="number"
+          id="year_established"
+          name="year_established"
+          value={formData.year_established}
           onChange={handleChange}
           required
           className="w-full px-3 py-2 border rounded"
         />
       </div>
-      <div>
-        <label htmlFor="country" className="block mb-1">Country</label>
-        <input
-          type="text"
-          id="country"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <div>
-        <label htmlFor="telephone" className="block mb-1">Telephone</label>
-        <input
-          type="tel"
-          id="telephone"
-          name="telephone"
-          value={formData.telephone}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <div>
-        <label htmlFor="email" className="block mb-1">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <div>
-        <label htmlFor="contactPersonName" className="block mb-1">Contact Person Name</label>
-        <input
-          type="text"
-          id="contactPersonName"
-          name="contactPersonName"
-          value={formData.contactPersonName}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <div>
-        <label htmlFor="contactPersonPosition" className="block mb-1">Contact Person Position</label>
-        <input
-          type="text"
-          id="contactPersonPosition"
-          name="contactPersonPosition"
-          value={formData.contactPersonPosition}
-          onChange={handleChange}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <button type="submit" className="bg-primary text-white px-4 py-2 rounded">Next</button>
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Next
+      </button>
     </form>
   )
 }
