@@ -1,9 +1,22 @@
-import { useState } from "react"
+"use client";
+
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function ProfessionalExperience({
   onSubmit,
   onBack,
-}: { onSubmit: (data: any) => void; onBack: () => void }) {
+  isLoading,
+}: {
+  onSubmit: (data: any) => void;
+  onBack: () => void;
+  isLoading: boolean;
+}) {
   const [experiences, setExperiences] = useState([
     {
       organization: "",
@@ -12,17 +25,20 @@ export default function ProfessionalExperience({
       start_time: "",
       end_time: "",
     },
-  ])
+  ]);
 
-  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const updatedExperiences = experiences.map((exp, i) => {
       if (i === index) {
-        return { ...exp, [e.target.name]: e.target.value }
+        return { ...exp, [e.target.name]: e.target.value };
       }
-      return exp
-    })
-    setExperiences(updatedExperiences)
-  }
+      return exp;
+    });
+    setExperiences(updatedExperiences);
+  };
 
   const addExperience = () => {
     setExperiences([
@@ -34,17 +50,17 @@ export default function ProfessionalExperience({
         start_time: "",
         end_time: "",
       },
-    ])
-  }
+    ]);
+  };
 
   const removeExperience = (index: number) => {
-    setExperiences(experiences.filter((_, i) => i !== index))
-  }
+    setExperiences(experiences.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit({ professional_experiences: experiences })
-  }
+    e.preventDefault();
+    onSubmit({ professional_experiences: experiences });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -52,75 +68,79 @@ export default function ProfessionalExperience({
         <div key={index} className="border p-4 rounded">
           <h3 className="font-semibold mb-2">Experience {index + 1}</h3>
           <div className="space-y-2">
-            <input
-              type="text"
+            <Label htmlFor={`organization-${index}`}>Organization</Label>
+            <Input
+              id={`organization-${index}`}
               name="organization"
-              placeholder="Organization"
               value={exp.organization}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
-            <input
-              type="text"
+            <Label htmlFor={`position-${index}`}>Position</Label>
+            <Input
+              id={`position-${index}`}
               name="position"
-              placeholder="Position"
               value={exp.position}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
-            <textarea
+            <Label htmlFor={`key_responsibilities-${index}`}>
+              Key Responsibilities
+            </Label>
+            <Textarea
+              id={`key_responsibilities-${index}`}
               name="key_responsibilities"
-              placeholder="Key Responsibilities"
               value={exp.key_responsibilities}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
             <div className="flex space-x-2">
-              <input
-                type="date"
-                name="start_time"
-                placeholder="Start Date"
-                value={exp.start_time}
-                onChange={(e) => handleChange(index, e)}
-                required
-                className="w-full px-3 py-2 border rounded"
-              />
-              <input
-                type="date"
-                name="end_time"
-                placeholder="End Date"
-                value={exp.end_time}
-                onChange={(e) => handleChange(index, e)}
-                className="w-full px-3 py-2 border rounded"
-              />
+              <div className="flex-1">
+                <Label htmlFor={`start_time-${index}`}>Start Date</Label>
+                <Input
+                  type="date"
+                  id={`start_time-${index}`}
+                  name="start_time"
+                  value={exp.start_time}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <Label htmlFor={`end_time-${index}`}>End Date</Label>
+                <Input
+                  type="date"
+                  id={`end_time-${index}`}
+                  name="end_time"
+                  value={exp.end_time}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </div>
             </div>
           </div>
           {experiences.length > 1 && (
-            <button type="button" onClick={() => removeExperience(index)} className="mt-2 text-red-500">
+            <Button
+              type="button"
+              onClick={() => removeExperience(index)}
+              variant="destructive"
+              className="mt-2"
+            >
               Remove Experience
-            </button>
+            </Button>
           )}
         </div>
       ))}
-      <button
-        type="button"
-        onClick={addExperience}
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
+      <Button type="button" onClick={addExperience} variant="outline">
         Add Experience
-      </button>
+      </Button>
       <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+        <Button type="button" onClick={onBack} variant="outline">
           Back
-        </button>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Next
-        </button>
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Next"}
+        </Button>
       </div>
     </form>
-  )
+  );
 }
-

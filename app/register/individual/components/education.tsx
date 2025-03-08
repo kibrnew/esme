@@ -1,6 +1,28 @@
-import { useState } from "react"
+"use client";
 
-export default function Education({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void }) {
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export default function Education({
+  onSubmit,
+  onBack,
+  isLoading,
+}: {
+  onSubmit: (data: any) => void;
+  onBack: () => void;
+  isLoading: boolean;
+}) {
   const [formData, setFormData] = useState({
     highest_degree: "",
     field_of_study: "",
@@ -8,127 +30,117 @@ export default function Education({ onSubmit, onBack }: { onSubmit: (data: any) 
     university: "",
     graduation_year: "",
     specialization: "",
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target) {
-          setFormData({ ...formData, degree_file: event.target.result as string })
+          setFormData({
+            ...formData,
+            degree_file: event.target.result as string,
+          });
         }
-      }
-      reader.readAsDataURL(e.target.files[0])
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="highest_degree" className="block mb-1">
-          Highest Degree
-        </label>
-        <select
-          id="highest_degree"
-          name="highest_degree"
-          value={formData.highest_degree}
-          onChange={handleChange}
+        <Label htmlFor="highest_degree">Highest Degree</Label>
+        <Select
+          onValueChange={(value) => handleSelectChange("highest_degree", value)}
           required
-          className="w-full px-3 py-2 border rounded"
         >
-          <option value="">Select</option>
-          <option value="Bachelor's Degree">Bachelor's Degree</option>
-          <option value="Master's Degree">Master's Degree</option>
-          <option value="PhD">PhD</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue placeholder="Select highest degree" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Bachelor's Degree">
+              Bachelor`&apos;`s Degree
+            </SelectItem>
+            <SelectItem value="Master's Degree">
+              Master`&apos;`s Degree
+            </SelectItem>
+            <SelectItem value="PhD">PhD</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
-        <label htmlFor="field_of_study" className="block mb-1">
-          Field of Study
-        </label>
-        <input
-          type="text"
+        <Label htmlFor="field_of_study">Field of Study</Label>
+        <Input
           id="field_of_study"
           name="field_of_study"
           value={formData.field_of_study}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="degree_file" className="block mb-1">
-          Degree Certificate
-        </label>
-        <input
+        <Label htmlFor="degree_file">Degree Certificate</Label>
+        <Input
           type="file"
           id="degree_file"
           name="degree_file"
           onChange={handleFileChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="university" className="block mb-1">
-          University
-        </label>
-        <input
-          type="text"
+        <Label htmlFor="university">University</Label>
+        <Input
           id="university"
           name="university"
           value={formData.university}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="graduation_year" className="block mb-1">
-          Graduation Year
-        </label>
-        <input
+        <Label htmlFor="graduation_year">Graduation Year</Label>
+        <Input
           type="number"
           id="graduation_year"
           name="graduation_year"
           value={formData.graduation_year}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="specialization" className="block mb-1">
-          Specialization
-        </label>
-        <input
-          type="text"
+        <Label htmlFor="specialization">Specialization</Label>
+        <Input
           id="specialization"
           name="specialization"
           value={formData.specialization}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+        <Button type="button" onClick={onBack} variant="outline">
           Back
-        </button>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Next
-        </button>
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Next"}
+        </Button>
       </div>
     </form>
-  )
+  );
 }
-

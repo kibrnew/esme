@@ -3,26 +3,42 @@
 import type React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/services/api";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setIsLoading(true);
 
-    // In a real application, you would send this data to your API
-    // For now, we'll just simulate a successful login
-    console.log("Login data:", { email, password });
+    try {
+      const response = await login({ username, password });
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast({
+        title: "Login Successful",
+        description: "You have been logged in successfully.",
+      });
 
-    // Redirect to dashboard after successful login
-    router.push("/dashboard");
+      // Redirect to dashboard after successful login
+      router.push("/dashboard");
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Invalid username or password",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -32,17 +48,17 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Email
+              Username
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="username"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -62,13 +78,13 @@ export default function Login() {
               required
             />
           </div>
-          {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? "Signing in..." : "Sign In"}
             </button>
           </div>
         </form>

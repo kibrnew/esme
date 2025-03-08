@@ -1,59 +1,67 @@
-import { useState } from "react"
+"use client";
 
-export default function ContactInfo({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void }) {
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export default function ContactInfo({
+  onSubmit,
+  onBack,
+  isLoading,
+}: {
+  onSubmit: (data: any) => void;
+  onBack: () => void;
+  isLoading: boolean;
+}) {
   const [formData, setFormData] = useState({
     email: "",
     phone_number: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block mb-1">
-          Email
-        </label>
-        <input
+        <Label htmlFor="email">Email</Label>
+        <Input
           type="email"
           id="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="phone_number" className="block mb-1">
-          Phone Number
-        </label>
-        <input
+        <Label htmlFor="phone_number">Phone Number</Label>
+        <Input
           type="tel"
           id="phone_number"
           name="phone_number"
           value={formData.phone_number}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+        <Button type="button" onClick={onBack} variant="outline">
           Back
-        </button>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Next
-        </button>
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Next"}
+        </Button>
       </div>
     </form>
-  )
+  );
 }
-

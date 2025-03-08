@@ -1,36 +1,55 @@
-import { useState } from "react"
+"use client";
 
-export default function Patents({ onSubmit, onBack }: { onSubmit: (data: any) => void; onBack: () => void }) {
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
+export default function Patents({
+  onSubmit,
+  onBack,
+  isLoading,
+}: {
+  onSubmit: (data: any) => void;
+  onBack: () => void;
+  isLoading: boolean;
+}) {
   const [patents, setPatents] = useState([
     {
       title: "",
       description: "",
       date: "",
     },
-  ])
+  ]);
 
-  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const updatedPatents = patents.map((patent, i) => {
       if (i === index) {
-        return { ...patent, [e.target.name]: e.target.value }
+        return { ...patent, [e.target.name]: e.target.value };
       }
-      return patent
-    })
-    setPatents(updatedPatents)
-  }
+      return patent;
+    });
+    setPatents(updatedPatents);
+  };
 
   const addPatent = () => {
-    setPatents([...patents, { title: "", description: "", date: "" }])
-  }
+    setPatents([...patents, { title: "", description: "", date: "" }]);
+  };
 
   const removePatent = (index: number) => {
-    setPatents(patents.filter((_, i) => i !== index))
-  }
+    setPatents(patents.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit({ patents })
-  }
+    e.preventDefault();
+    onSubmit({ patents });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -38,56 +57,55 @@ export default function Patents({ onSubmit, onBack }: { onSubmit: (data: any) =>
         <div key={index} className="border p-4 rounded">
           <h3 className="font-semibold mb-2">Patent {index + 1}</h3>
           <div className="space-y-2">
-            <input
-              type="text"
+            <Label htmlFor={`title-${index}`}>Title</Label>
+            <Input
+              id={`title-${index}`}
               name="title"
-              placeholder="Title"
               value={patent.title}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
-            <textarea
+            <Label htmlFor={`description-${index}`}>Description</Label>
+            <Textarea
+              id={`description-${index}`}
               name="description"
-              placeholder="Description"
               value={patent.description}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
-            <input
+            <Label htmlFor={`date-${index}`}>Date</Label>
+            <Input
               type="date"
+              id={`date-${index}`}
               name="date"
-              placeholder="Patent Date"
               value={patent.date}
               onChange={(e) => handleChange(index, e)}
               required
-              className="w-full px-3 py-2 border rounded"
             />
           </div>
           {patents.length > 1 && (
-            <button type="button" onClick={() => removePatent(index)} className="mt-2 text-red-500">
+            <Button
+              type="button"
+              onClick={() => removePatent(index)}
+              variant="destructive"
+              className="mt-2"
+            >
               Remove Patent
-            </button>
+            </Button>
           )}
         </div>
       ))}
-      <button
-        type="button"
-        onClick={addPatent}
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
+      <Button type="button" onClick={addPatent} variant="outline">
         Add Patent
-      </button>
+      </Button>
       <div className="flex justify-between">
-        <button type="button" onClick={onBack} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+        <Button type="button" onClick={onBack} variant="outline">
           Back
-        </button>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Next
-        </button>
+        </Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting..." : "Next"}
+        </Button>
       </div>
     </form>
-  )
+  );
 }
-

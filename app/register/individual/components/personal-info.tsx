@@ -1,88 +1,121 @@
-import { useState } from "react"
+"use client";
 
-export default function PersonalInfo({ onSubmit }: { onSubmit: (data: any) => void }) {
+import type React from "react";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export default function PersonalInfo({
+  onSubmit,
+  isLoading,
+}: {
+  onSubmit: (data: any) => void;
+  isLoading: boolean;
+}) {
   const [formData, setFormData] = useState({
+    username: "",
+    password: "",
     full_name: "",
     sex: "",
     date_of_birth: "",
     nationality: "",
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="full_name" className="block mb-1">
-          Full Name
-        </label>
-        <input
-          type="text"
+        <Label htmlFor="username">Username</Label>
+        <Input
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="full_name">Full Name</Label>
+        <Input
           id="full_name"
           name="full_name"
           value={formData.full_name}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="sex" className="block mb-1">
-          Sex
-        </label>
-        <select
-          id="sex"
-          name="sex"
-          value={formData.sex}
-          onChange={handleChange}
+        <Label htmlFor="sex">Sex</Label>
+        <Select
+          onValueChange={(value) => handleSelectChange("sex", value)}
           required
-          className="w-full px-3 py-2 border rounded"
         >
-          <option value="">Select</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue placeholder="Select sex" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Male">Male</SelectItem>
+            <SelectItem value="Female">Female</SelectItem>
+            <SelectItem value="Other">Other</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
-        <label htmlFor="date_of_birth" className="block mb-1">
-          Date of Birth
-        </label>
-        <input
+        <Label htmlFor="date_of_birth">Date of Birth</Label>
+        <Input
           type="date"
           id="date_of_birth"
           name="date_of_birth"
           value={formData.date_of_birth}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
       <div>
-        <label htmlFor="nationality" className="block mb-1">
-          Nationality
-        </label>
-        <input
-          type="text"
+        <Label htmlFor="nationality">Nationality</Label>
+        <Input
           id="nationality"
           name="nationality"
           value={formData.nationality}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded"
         />
       </div>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        Next
-      </button>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Submitting..." : "Next"}
+      </Button>
     </form>
-  )
+  );
 }
-
